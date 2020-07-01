@@ -2,11 +2,18 @@
 #include <memory>
 #include <functional>
 #include <iostream>
+#include <atomic>
+
+class Event
+{
+    //TODO after prt task
+};
 
 class Signal
 {
+    using Funcion = std::function<void()>;
 public:
-    void set(std::function<void()> func) noexcept
+    void operator=(const Funcion& func) noexcept      //TODO Template for rvalue
     {
         m_func = func;
     }
@@ -20,18 +27,22 @@ public:
     }
 
 private:
-    std::function<void()> m_func;
+    Funcion m_func;
 };
 
 class Object
 {
 public:
-    Object() = default;
-    Object(const std::string& name)
+    static auto create(const std::string& name = "")
     {
-        m_name = name;
+        //return name.empty ? std::make_shared<Object>() : std::make_shared<Object>(name);
+        return name.empty() ? std::shared_ptr<Object>(new Object()) : std::shared_ptr<Object>(new Object(name));
     }
-    ~Object() {std::cout << "Object Destructor" << std::endl; m_ptr.reset();}
+
+    virtual ~Object()
+    {
+        std::cout << "Object Destructor" << std::endl;
+    }
 
     void ckick()
     {
@@ -47,9 +58,10 @@ public:
     }
 
 private:
-    void set_self_ptr(std::shared_ptr<Object> ptr)
+    Object() = default;
+    Object(const std::string& name)
     {
-        if(ptr) m_ptr = ptr;
+        m_name = name;
     }
 
 public:
@@ -57,18 +69,7 @@ public:
 
 private:
     std::string m_name;
-    std::shared_ptr<Object> m_ptr;
-    template <typename T>
-    friend T& create(const std::string& name);
 };
-
-template <typename T>
-T& create(const std::string& name)
-{
-    auto obj = std::make_shared<T>(name);
-    obj->set_self_ptr(obj);
-    return *obj;
-}
 
 
 
@@ -79,10 +80,10 @@ T& create(const std::string& name)
 
 int main()
 {
-    auto btn = create<Object>("Hello");
-
-    btn.on_click["set_text"].set([](){std::cout << "Hello" << std::endl;});
-    btn.ckick();
-    btn.on_click["set_text"].del();
-    btn.ckick();
+    auto btn = Object::create("Hello");     //Object::set_child
+    int tmp = 12;
+    btn->on_click["set_text"] = [&tmp](){tmp++; std::cout << "Hello" << std::endl;};
+    btn->ckick();
+    btn->on_click["set_text"].del();
+    btn->ckick();
 }

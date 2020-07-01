@@ -1,14 +1,14 @@
 # Memphis
 Cross-platform GUI and Event System
 
-Философия
+Philosophy
 
-0. Система заработает при минимальном количестве строк (3 строки: создать, настроить, запустить)
-1. Оградить пользователя от утечки памяти (убрать явное new и delete)
-2. Проще выключить функцию, чем её включить
-3. Предупреждать пользователя о возможной проблеме
-4. Делать простое простым, а сложное - отдельно
-5. Красивый код библиотеки
-6. Простота сборки: все в заголовочном файле
-7. . вместо ->
-
+0. The system will work with a minimum number of lines (3 lines: create, set up, use)
+1. Protect users from memory leak (remove explicit new and delete)
+2. It's easier to turn off a function than to turn it on
+3. Warn user about possible problem
+4. Make simple simple and difficult in simple pieces
+5. Beautiful library code (no extra__ and gibberish)
+6. Easy to build: everything in the header file
+7. . instead ->
+8. Anything Memphis can do automatically is done automatically
